@@ -19,17 +19,20 @@
 
 
 ### Files in the Repository section:
-1. app
+1. app folder
 - template
     - master.html # main page of web app
     - go.html # classification result page of web app
 - run.py # Flask file that runs app
-2. data
+
+2. data folder
 - disaster_categories.csv # data to process
 - disaster_messages.csv # data to process
 - process_data.py
 - InsertDatabaseName.db # database to save clean data to
-3. models
+
+3. models folder
 - train_classifier.py
 - classifier.pkl # saved model
+
 4. README.md

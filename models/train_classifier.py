@@ -11,7 +11,7 @@ import pickle
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-from nltk.stem.porter import PorterStemmer
+from nltk.stem import WordNetLemmatizer
 nltk.download(['wordnet', 'punkt', 'stopwords']) 
 
 
@@ -60,10 +60,16 @@ def tokenize(text):
    
     # normalization word tokens and remove stop words
     stopwords_cleaned = stopwords.words("english")
-    normlizer = PorterStemmer()
+    lemmatizer = WordNetLemmatizer()
     
-    normlized = [normlizer.stem(word) for word in words if word not in stopwords_cleaned]
-    return normlized
+    clean_tokens=[]
+    
+    for tok in words:
+        # lemmatize, normalise case, and remove leading/trailing white space
+        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+        clean_tokens.append(clean_tok)
+        
+    return clean_tokens
     
 
 def build_model():
@@ -91,22 +97,16 @@ def build_model():
 def evaluate_model(model, X_test, Y_test, category_names):
     """
     Input: 
-        model: model 
+        model: classifier 
         X_test: test set of independent_var
         Y_test: test set of dependent_var
         category_names: category names
     Output: NA
     """
     
-    Y_prediction = model.predict(X_test)
-
-    i = 0
-    for col in Y_test:
-        print(classification_report(Y_test[col], Y_prediction[:, i]))
-        i += 1
-    accuracy = (Y_prediction == Y_test.values).mean()
-    print("Accuracy of Model {:.3f}".format(accuracy))
-    return
+    y_pred = model.predict(X_test)
+    for index, column in enumerate(Y_test):
+        print(column, classification_report(Y_test[column], y_pred[:, index]))
 
 
 def save_model(model, model_filepath):
